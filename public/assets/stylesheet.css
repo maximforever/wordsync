@@ -1,0 +1,62 @@
+body {
+    background: #E9EDDE;
+    text-align: center;
+    color: #3D3B30;
+}
+
+button {
+    text-transform: uppercase;
+}
+
+label {
+    text-align: left;
+}
+
+.error {
+    background: #ffa5a5;
+    color: #630000;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+}
+
+.bold {
+    font-weight: 700;
+    color: #5C80BC;
+}
+
+.word {
+    color: #5C80BC;
+}
+
+.one-word {
+    background: #3D3B30;
+    border-radius: 4px;
+    color: #E9EDDE;
+}
+
+#next-guess {
+    font-size: 3rem;
+}
+
+#submit-guess {
+    font-size: 3rem;
+}
+
+.left{
+    text-align: left;
+}
+
+.right{
+    text-align: right;
+}
+
+
+@media (min-width: 550px) {}
+
+    .container {
+        max-width: 550px;
+    }
+
+
+
+}

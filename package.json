@@ -1,0 +1,29 @@
+{
+  "name": "wordsync",
+  "version": "1.0.0",
+  "description": "A short, socket.io powered Node/Express game that challenges two players to meet in the middle",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maximforever/wordsync.git"
+  },
+  "author": "Max Pekarsky",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maximforever/wordsync/issues"
+  },
+  "homepage": "https://github.com/maximforever/wordsync#readme",
+  "dependencies": {
+    "connect-mongo": "^2.0.1",
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "mongodb": "^3.0.1",
+    "nodemon": "^1.14.11",
+    "socket.io": "^2.0.4"
+  }
+}

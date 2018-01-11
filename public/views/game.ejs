@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<HTML>
+    <HEAD>
+        <title>WordSync</title>
+
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+        <meta name="description" content="This will be a description">
+
+        <!--  SKELETON AND FONT  -->
+        <link href="https://fonts.googleapis.com/css?family=Palanquin+Dark:400,700" rel="stylesheet">
+        <link rel = "stylesheet" type = "text/css" href ="/assets/skeleton.css"/>
+
+
+        <link rel = "stylesheet" type = "text/css" href ="/assets/stylesheet.css"/>
+        <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    </HEAD>
+
+    <BODY>
+        <div class = "error" id = "game-error"><%= error %></div>
+        
+        <div class="container">
+            <div class = "row">
+
+                <div class = "error" id = "game-error"></div>
+
+                <div id = "word-section">
+                    <div class = "six columns one-word left">Your word: <span class = "word" id = "your-word">---</span></div>
+                    <div class = "six columns one-word right">Their word: <span class = "word" id = "their-word">---</span></div>
+                </div>
+
+                <div id = "input-section">
+                    <input id = "next-guess" class = "input-submit"/><!-- 
+                     --><button id = "submit-guess">&rarr;</button>
+                </div>
+
+                <div id = "history-section" class = "row">
+                    <div class = "six columns" id = "your-history-section">
+                        <h6>Your words</h6>
+                        <div id = "your-history">
+                        </div>
+                    </div>
+                    <div class = "six columns" id = "their-history-section">
+                        <h6>Their words</h6>
+                        <div id = "their-history">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <script src="https://cdn.socket.io/socket.io-1.4.0.js"></script>
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src = "/assets/script.js"></script>
+    </BODY>
+</HTML>
+
+
