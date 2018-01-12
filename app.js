@@ -36,173 +36,174 @@ MongoClient.connect(dbAddress, function(err, database){
     if (err){
         console.log("MAYDAY! MAYDAY! Crashing.");
         return console.log(err);
-    } 
-
-    db = database.db("wordsync");       // fix for Mongo 3.0.0
-                                        // alternativey, use "mongodb": "^2.2.33" in package.JSON
+    } else {
 
 
-    app.use(bodyParser.urlencoded({
-        extended: true
-    }));
-
-    app.use(bodyParser.json());                         // for parsing application/json
-
-    var thisDb = db;
-
-    var sessionSecret = process.env.SESSION_SECRET || "ejqjxvsh994hw8e7fl4gbnslvt3";
-
-    var sessionMiddleware = session({                                
-        secret: sessionSecret,             
-        saveUninitialized: true,
-        resave: false,
-        secure: false,
-        expires: null,
-        cookie: {
-            maxAge: null
-        },/*
-        store: new MongoStore({ 
-            db: thisDb,
-            ttl: 60*60*12,                  // in seconds - so, 12 hours total. Ths should hopefully expire and remove sessions for users that haven't logged in
-            autoRemove: 'native'
-        })*/
-    })
+        db = database.db("wordsync");       // fix for Mongo 3.0.0
+                                            // alternativey, use "mongodb": "^2.2.33" in package.JSON
 
 
+        app.use(bodyParser.urlencoded({
+            extended: true
+        }));
 
-    app.use(sessionMiddleware);         // give app access to the session
+        app.use(bodyParser.json());                         // for parsing application/json
 
-    io.use(function(socket, next) {     // give socket.io access to the session
-        sessionMiddleware(socket.request, socket.request.res, next);
-    });
+        var thisDb = db;
 
-    app.use(function(req, res, next){                                           // logs request URL
-        
-        var timeNow = new Date();
-        console.log("-----> " + req.method.toUpperCase() + " " + req.url + " on " + timeNow); 
+        var sessionSecret = process.env.SESSION_SECRET || "ejqjxvsh994hw8e7fl4gbnslvt3";
 
-        next();
-    });
+        var sessionMiddleware = session({                                
+            secret: sessionSecret,             
+            saveUninitialized: true,
+            resave: false,
+            secure: false,
+            expires: null,
+            cookie: {
+                maxAge: null
+            },/*
+            store: new MongoStore({ 
+                db: thisDb,
+                ttl: 60*60*12,                  // in seconds - so, 12 hours total. Ths should hopefully expire and remove sessions for users that haven't logged in
+                autoRemove: 'native'
+            })*/
+        })
 
 
-/* ROUTES */
 
-    io.on('connection', function(socket){
+        app.use(sessionMiddleware);         // give app access to the session
 
-        console.log('a user connected');
-        userCount++;
-        console.log("User count is now: " + userCount);
+        io.use(function(socket, next) {     // give socket.io access to the session
+            sessionMiddleware(socket.request, socket.request.res, next);
+        });
 
-        console.log("socket.request.session.id");
-        console.log(socket.request.session.id);
+        app.use(function(req, res, next){                                           // logs request URL
+            
+            var timeNow = new Date();
+            console.log("-----> " + req.method.toUpperCase() + " " + req.url + " on " + timeNow); 
 
-        socket.emit("update id", socket.request.session.id);
-        
-        socket.on('disconnect', function(){
-            console.log('user disconnected');
-            userCount--;
+            next();
+        });
+
+
+        /* ROUTES */
+
+        io.on('connection', function(socket){
+
+            console.log('a user connected');
+            userCount++;
             console.log("User count is now: " + userCount);
-        });
 
+            console.log("socket.request.session.id");
+            console.log(socket.request.session.id);
 
-        socket.on("new game", function(){
-            var playerId = socket.request.session.id;          // how we access the session from Socket.io NOTE: can't write!
-            GameActions.createGame(db, playerId, function(result){
-                
-                if(result.status == "success") { 
-                    game = result.game 
-                }
-                
-                socket.emit("game created", result);
+            socket.emit("update id", socket.request.session.id);
+            
+            socket.on('disconnect', function(){
+                console.log('user disconnected');
+                userCount--;
+                console.log("User count is now: " + userCount);
             });
 
-        });
 
-
-        socket.on("join game", function(gameId){
-                var playerId = socket.request.session.id;          
-                GameActions.joinGame(db, playerId, gameId, function(result){
+            socket.on("new game", function(){
+                var playerId = socket.request.session.id;          // how we access the session from Socket.io NOTE: can't write!
+                GameActions.createGame(db, playerId, function(result){
                     
-                    if(result.status == "success"){
-                        game = result.game;
-                        io.emit("game joined", result);
-                    } else {
-                        socket.emit("game joined", result);
+                    if(result.status == "success") { 
+                        game = result.game 
                     }
+                    
+                    socket.emit("game created", result);
+                });
+
             });
 
-        });
 
-        socket.on("submit guess", function(word){
-            console.log("incoming guess");
-            word = word.trim().toLowerCase();
-            var playerId = socket.request.session.id;          
-            GameActions.submitGuess(db, playerId, game.id, word, function(result){
-                if(result.status == "success"){
-                    result.game.player1.currentWord = null;
-                    result.game.player2.currentWord = null;
-                    io.emit("guess submitted", result);
-                } else {
-                    socket.emit("guess submitted", result);
-                }                    
+            socket.on("join game", function(gameId){
+                    var playerId = socket.request.session.id;          
+                    GameActions.joinGame(db, playerId, gameId, function(result){
+                        
+                        if(result.status == "success"){
+                            game = result.game;
+                            io.emit("game joined", result);
+                        } else {
+                            socket.emit("game joined", result);
+                        }
+                });
+
             });
 
-        });
+            socket.on("submit guess", function(word){
+                console.log("incoming guess");
+                word = word.trim().toLowerCase();
+                var playerId = socket.request.session.id;          
+                GameActions.submitGuess(db, playerId, game.id, word, function(result){
+                    if(result.status == "success"){
+                        result.game.player1.currentWord = null;
+                        result.game.player2.currentWord = null;
+                        io.emit("guess submitted", result);
+                    } else {
+                        socket.emit("guess submitted", result);
+                    }                    
+                });
 
-
-        socket.on("get updated game", function(){
-            var playerId = socket.request.session.id;   
-            GameActions.loadGame(db, playerId, game.id, function(result){
-                socket.emit("game updated", result)
             });
+
+
+            socket.on("get updated game", function(){
+                var playerId = socket.request.session.id;   
+                GameActions.loadGame(db, playerId, game.id, function(result){
+                    socket.emit("game updated", result)
+                });
+            });
+
+
         });
+            
 
+        app.get("/", function(req, res){
+            console.log("req.session.id");
+            console.log(req.session.id);
+            res.render("start", {error: ""});   
+        })
 
-    });
-        
+        app.get("/game", function(req, res){
 
-    app.get("/", function(req, res){
-        console.log("req.session.id");
-        console.log(req.session.id);
-        res.render("start", {error: ""});   
-    })
-
-    app.get("/game", function(req, res){
-
-        if(game == null){ 
-            game = {id: 12345 };            // 5 digit ID ensures the game will never be found
-        }
-
-        GameActions.loadGame(db, req.session.id, game.id, function(result){
-
-            if(result.status == "success"){
-                res.render("game", {error: "", gameId: game.id});
-            } else {
-                res.redirect("/");   
+            if(game == null){ 
+                game = {id: 12345 };            // 5 digit ID ensures the game will never be found
             }
 
+            GameActions.loadGame(db, req.session.id, game.id, function(result){
+
+                if(result.status == "success"){
+                    res.render("game", {error: "", gameId: game.id});
+                } else {
+                    res.redirect("/");   
+                }
+
+            });
+            
+        })
+
+
+        app.get("/aww", function(req, res){
+            res.render("loss");   
+        })
+
+
+        /* END ROUTES */
+
+
+        /* 404 */
+
+        app.use(function(req, res) {
+            res.status(404);
+            req.session.error = "404 - page not found!";
+            res.redirect("/");
         });
-        
-    })
 
-
-    app.get("/aww", function(req, res){
-        res.render("loss");   
-    })
-
-
-/* END ROUTES */
-
-
-    /* 404 */
-
-    app.use(function(req, res) {
-        res.status(404);
-        req.session.error = "404 - page not found!";
-        res.redirect("/");
-    });
-
-    http.listen(app.get("port"), function() {
-        console.log("Server started on port " + app.get("port"));
-    });
-});
+        http.listen(app.get("port"), function() {
+            console.log("Server started on port " + app.get("port"));
+        });
+}});
