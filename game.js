@@ -58,14 +58,16 @@ function joinGame(db, playerId, gameId, done){
             console.log("game found");
             var game = games[0];
 
-
-            // WHAT IF A PLAYER IS REJOINING? Need to check if p1 or p2 are == playerId and then allow to join
-
-            if(game.player2.id == null || game.player2.id == "null"){
+            if(playerId == game.player1.id || playerId == game.player2.id){
+                done({
+                    status: "success",
+                    game: games[0]
+                })
+            } else if(game.player2.id == null || game.player2.id == "null"){
                 if(game.player1.id != playerId){
                     var gameUpdate = {
                         $set: {
-                            status: "waiting",
+                            status: "in progress"
                         }
                     }
 
@@ -122,7 +124,7 @@ function loadGame(db, playerId, gameId, done){
 
             if(game.player1.id == playerId || game.player2.id == playerId){
 
-                if(game.status == "waiting" || game.status == "in progress"){
+                if(game.status == "in progress"){
 
                     var thisPlayer = "player1";
                     var otherPlayer = "player2";
@@ -165,7 +167,7 @@ function loadGame(db, playerId, gameId, done){
     });
 }
 
-function submitWord(db, playerId, gameId, word, done){
+function submitGuess(db, playerId, gameId, word, done){
 
     var gameQuery = {
         id: gameId
@@ -202,8 +204,15 @@ function submitWord(db, playerId, gameId, word, done){
 
                         // if the other player hasn't submitted his word yet...
                         console.log("still waiting for the other player to submit word");
-                        gameUpdate.$set.status = "waiting";
-                        gameUpdate.$set[thisPlayer + ".currentWord"] = word;
+                        if(game[thisPlayer].currentWord == null || game[thisPlayer].currentWord == "null"){
+                            gameUpdate.$set[thisPlayer + ".currentWord"] = word;
+                        } else {
+                            done({
+                                status: "error",
+                                error: "You already submitted a guess: " + game[thisPlayer].currentWord
+                            })
+                        }
+                        
 
                     } else {
 
@@ -234,7 +243,6 @@ function submitWord(db, playerId, gameId, word, done){
                             gameUpdate.$set.status = "won";  
                         } else {
                             console.log("not quite, but let's keep trying");
-                            gameUpdate.$set.status = "in progress";
                         }
 
 
@@ -245,11 +253,18 @@ function submitWord(db, playerId, gameId, word, done){
                     console.log("----------");
 
                     database.update(db, "games", gameQuery, gameUpdate, function(updatedGame){
+
+                        var p1status = false,
+                            p2status = false;
+
+                        if(updatedGame.player1.currentWord != null && updatedGame.player1.currentWord != "null" ) { p1status = true}
+                        if(updatedGame.player2.currentWord != null && updatedGame.player2.currentWord != "null" ) { p1status = true}
+
                         done({
-                            status: updatedGame.status,
-                            game: updatedGame,
-                            thisPlayer: updatedGame[thisPlayer],
-                            otherPlayer: updatedGame[otherPlayer]
+                            status: "success",
+                            player1done: p1status,
+                            player2done: p2status,
+                            game: updatedGame
                         })
                     });
 
@@ -288,4 +303,4 @@ function generateId(length){
 module.exports.createGame = createGame;
 module.exports.joinGame = joinGame;
 module.exports.loadGame = loadGame;
-module.exports.submitWord = submitWord;
+module.exports.submitGuess = submitGuess;

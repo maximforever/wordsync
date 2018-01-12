@@ -15,34 +15,50 @@
         <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
     </HEAD>
 
-    <BODY>
-        <div class = "error" id = "game-error"><%= error %></div>
-        
+    <BODY> 
         <div class="container">
-            <div class = "row">
-
-                <div class = "error" id = "game-error"></div>
-
+            <div id = "header-section">
+                <div class = "row">
+                        <div class = "six columns left">
+                           WordSync
+                        </div>
+                        <div class = "six columns right">
+                            <%= gameId %>
+                        </div>
+                </div>
+            </div>
                 <div id = "word-section">
-                    <div class = "six columns one-word left">Your word: <span class = "word" id = "your-word">---</span></div>
-                    <div class = "six columns one-word right">Their word: <span class = "word" id = "their-word">---</span></div>
+                    <div class = "row">
+                        <div class = "error" id = "game-error"><%= error %></div>
+                    </div>
+                    <div class = "row">
+                        <div class = "six columns one-word left">
+                            Your last guess<br> 
+                            <span class = "word" id = "your-word"></span>
+                        </div>
+                        <div class = "six columns one-word right">
+                            Their last guess<br>
+                            <span class = "word" id = "their-word"></span>
+                         </div>
+                    </div>
                 </div>
 
                 <div id = "input-section">
-                    <input id = "next-guess" class = "input-submit"/><!-- 
-                     --><button id = "submit-guess">&rarr;</button>
-                </div>
-
-                <div id = "history-section" class = "row">
-                    <div class = "six columns" id = "your-history-section">
-                        <h6>Your words</h6>
-                        <div id = "your-history">
-                        </div>
+                    <div id = "input-wrapper">
+                        <div class = "input-label">Your next guess</div>
+                        <input id = "next-guess" class = "input-submit u-full-width"/>
+                        <button id = "submit-guess" class = "button-primary">Guess!</button>
                     </div>
-                    <div class = "six columns" id = "their-history-section">
-                        <h6>Their words</h6>
-                        <div id = "their-history">
-                        </div>
+                    <div id = "guess-waiting-status"></div>
+                </div>
+                <div id = "history-section" class = "row">
+                    <div class = "six columns left">
+                        <h6>Your guesses</h6>
+                    </div>
+                    <div class = "six columns right">
+                        <h6>Their guesses</h6>
+                    </div>
+                    <div id = "guess-history">
                     </div>
                 </div>
 

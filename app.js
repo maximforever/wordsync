@@ -12,6 +12,9 @@ const app = express();
 const http = require("http").Server(app);
 var io  = require('socket.io')(http);
 
+app.io = io;            // this allows us to emit events on route, I think
+
+
 const GameActions  = require('./game.js');
 var game = null;
 
@@ -92,6 +95,8 @@ MongoClient.connect(dbAddress, function(err, database){
 
         console.log("socket.request.session.id");
         console.log(socket.request.session.id);
+
+        socket.emit("update id", socket.request.session.id);
         
         socket.on('disconnect', function(){
             console.log('user disconnected');
@@ -103,7 +108,11 @@ MongoClient.connect(dbAddress, function(err, database){
         socket.on("new game", function(){
             var playerId = socket.request.session.id;          // how we access the session from Socket.io NOTE: can't write!
             GameActions.createGame(db, playerId, function(result){
-                if(result.status == "success") { game = result.game }
+                
+                if(result.status == "success") { 
+                    game = result.game 
+                }
+                
                 socket.emit("game created", result);
             });
 
@@ -113,6 +122,7 @@ MongoClient.connect(dbAddress, function(err, database){
         socket.on("join game", function(gameId){
                 var playerId = socket.request.session.id;          
                 GameActions.joinGame(db, playerId, gameId, function(result){
+                    
                     if(result.status == "success"){
                         game = result.game;
                         io.emit("game joined", result);
@@ -127,10 +137,10 @@ MongoClient.connect(dbAddress, function(err, database){
             console.log("incoming guess");
             word = word.trim().toLowerCase();
             var playerId = socket.request.session.id;          
-            GameActions.submitWord(db, playerId, game.id, word, function(result){
-
-                if(result.status == "in progress" || result.status == "waiting" || result.status == "won"){
-                    game = result.game;
+            GameActions.submitGuess(db, playerId, game.id, word, function(result){
+                if(result.status == "success"){
+                    result.game.player1.currentWord = null;
+                    result.game.player2.currentWord = null;
                     io.emit("guess submitted", result);
                 } else {
                     socket.emit("guess submitted", result);
@@ -139,6 +149,13 @@ MongoClient.connect(dbAddress, function(err, database){
 
         });
 
+
+        socket.on("get updated game", function(){
+            var playerId = socket.request.session.id;   
+            GameActions.loadGame(db, playerId, game.id, function(result){
+                socket.emit("game updated", result)
+            });
+        });
 
 
     });
@@ -159,18 +176,15 @@ MongoClient.connect(dbAddress, function(err, database){
         GameActions.loadGame(db, req.session.id, game.id, function(result){
 
             if(result.status == "success"){
-                res.render("game", {error: ""});
+                res.render("game", {error: "", gameId: game.id});
             } else {
-                res.render("start", { error: result.error });   
+                res.redirect("/");   
             }
 
         });
         
     })
 
-    app.get("/victory", function(req, res){
-        res.render("victory");   
-    })
 
     app.get("/aww", function(req, res){
         res.render("loss");   

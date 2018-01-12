@@ -16,19 +16,21 @@
     </HEAD>
 
     <BODY>
-        <div class = "error" id = "start-error"><%= error %></div>
-        
         <div class="container">
+            <div class = "error" id = "start-error"><%= error %></div>
             <div class = "row">
-
                 <div class="twelve columns">
-                    <h1 id = "logo">WordSync</h1>
+                    <div id = "logo-section">
+                        <h1 id = "logo">WordSync</h1>
+                    </div>
+                    <div id = "new-game-section">
+                        <button id = "new-game" class = "button-primary">New Game</button>
+                    </div>
 
-                    <button id = "new-game" class = "button-primary">New Game</button>
-
-                    <input id = "game-code" placeholder = "game code"/><br>
-                    <button id = "join-game">Join Game</button>
-
+                    <div id = "join-game-section">
+                        <input id = "game-code" placeholder = "code"/><br>
+                        <button id = "join-game">Join Game</button>
+                    </div>
                 </div>
             </div>
         </div>

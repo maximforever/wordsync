@@ -8,15 +8,87 @@ button {
     text-transform: uppercase;
 }
 
+button.button-primary, button.button-primary:focus {
+    color: #4D5061;
+    background-color: #E7E247;
+    border-color: #E7E247;
+}
+
+button.button-primary:hover, button.button-primary:active, button.button-primary:visited {
+    background-color: #bfb933;
+    border-color: #bfb933;
+}
+
 label {
     text-align: left;
 }
 
+.container {
+    padding: 0;
+}
+
 .error {
-    background: #ffa5a5;
     color: #630000;
-    font-size: 1.5rem;
     text-transform: uppercase;
+    display: none;
+}
+
+.active-error {
+    background: #ffa5a5;
+    display: block;
+}
+
+#game-error, #start-error {
+    font-size: 1.4rem;
+    padding: 3px;
+    min-height: calc(1.4rem + 8px);
+}
+
+#start-error {
+    display: block;
+}
+
+#word-section {
+    min-height: 15vh;
+    padding-top: 10px;
+}
+
+#input-section{
+    height: 45vh;
+}
+
+#history-section {
+    height: 30vh;
+    border-top: 1px solid #b0b3a7;
+}
+
+#history-section h6 {
+    font-weight: 700;
+} 
+
+#logo-section {
+    height: 30vh;
+}
+
+#new-game-section{
+    height: 20vh;
+}
+
+#join-game-section{
+    height: 10vh;
+}
+
+#guess-waiting-status{
+    padding-top: 10vh;
+}
+
+#waiting-status {
+    font-size: 1.6rem;
+}
+
+#logo {
+    padding-top: 9vh;
+    color: #5C80BC;
 }
 
 .bold {
@@ -25,21 +97,43 @@ label {
 }
 
 .word {
-    color: #5C80BC;
-}
-
-.one-word {
+    width: calc(100% - 14px);
     background: #3D3B30;
-    border-radius: 4px;
-    color: #E9EDDE;
+    border-radius: 10px;
+    display: inline-block;
+    padding: 5px;
+    color: #E7E247;
+    font-size: 1.8rem;
+    min-height: calc(1.8rem + 10px);
+    text-align: center; 
+    text-transform: uppercase;
 }
 
-#next-guess {
+
+#game-code, #next-guess {
     font-size: 3rem;
+    border: 1px solid #b0b3a7;
+}
+
+#game-code {
+    margin-top: 3vh;
+    width: 134.14px;
+    font-size: 2.5rem;
+}
+
+#input-wrapper{
+    padding-top: 10vh;
+}
+
+.input-label{
+    font-size: 1.3rem;
+    text-align: left;
+    text-transform: uppercase;
 }
 
 #submit-guess {
-    font-size: 3rem;
+    margin: 0 auto;
+    display: block;
 }
 
 .left{
@@ -49,6 +143,34 @@ label {
 .right{
     text-align: right;
 }
+
+#header-section {
+    padding: 4px 10px;
+    background: #5C80BC;
+    color: #E9EDDE;
+    text-transform: uppercase;
+    font-size: 1.4rem;
+}
+
+#round-count-section{
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+
+/* VICTORY */
+
+#victory-message{
+    font-size: 4rem;
+    color: #5C80BC;
+    padding-top: 10vh;
+}
+
+#play-again {
+    margin-top: 2vh;
+}
+
+
 
 
 @media (min-width: 550px) {}
