@@ -170,6 +170,13 @@ label {
     margin-top: 2vh;
 }
 
+.game-id {
+    font-family: monospace;
+    background: #5C80BC;
+    color: #E9EDDE;
+    padding: 3px 8px;
+    border-radius: 5px;
+}
 
 
 

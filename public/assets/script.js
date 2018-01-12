@@ -52,7 +52,7 @@ $(document).ready(function(){
     socket.on("game created", function(result){
         console.log(result);
         if(result.status == "success"){
-            $("#new-game-section").empty().append("<span>Created game <span class = 'bold'>" + result.game.id + "</span></span><br><span id ='waiting-status'>Waiting for second player to join</span>").css("font-size", "2rem");
+            $("#new-game-section").empty().append("<span>Created game <span class = 'game-id'>" + result.game.id.toUpperCase() + "</span></span><br><span id ='waiting-status'>Waiting for second player to join</span>").css("font-size", "3rem");
         } else if(result.status == "error"){
             $("#start-error").addClass("active-error").text(result.error);
         }
