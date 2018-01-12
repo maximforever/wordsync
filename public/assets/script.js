@@ -129,8 +129,6 @@ $(document).ready(function(){
         if(game[thisPlayer].history.length){ 
             var lastPosition = game[thisPlayer].history.length - 1;
             yourLastWord = game[thisPlayer].history[lastPosition];
-            $("#round-count").text(game[thisPlayer].history.length + 1);
-        
         }
         
         if(game[otherPlayer].history.length){ 
@@ -168,7 +166,7 @@ $(document).ready(function(){
             showInput();
         }*/
 
-
+        $("#round-count").text(game[thisPlayer].history.length + 1);
         $("#your-word").text(yourLastWord);
         $("#their-word").text(theirLastWord);
         $("#input-wrapper").show();
