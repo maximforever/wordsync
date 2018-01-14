@@ -17,7 +17,6 @@ $(document).ready(function(){
 
     $("body").on("click", "#submit-guess", function(){
         var word = $("#next-guess").val().trim().toLowerCase();
-        console.log(word);
         if(word.length){
             hideInput();
             socket.emit("submit guess", word);
@@ -150,28 +149,26 @@ $(document).ready(function(){
                 var yourHistoryWord = game[thisPlayer].history[i];
                 var theirHistoryWord = game[otherPlayer].history[i];
 
-                console.log(yourHistoryWord);
-                console.log(theirHistoryWord);
                 $("#guess-history").append("<div class = 'row'><div class = 'six columns left'>" + yourHistoryWord + "</div><div class = 'six columns right'>" + theirHistoryWord + "</div><div>");
             }
         } else {
             $("#game-error").text("Unable to display guess history").addClass("active-error");
         }
 
-/*        if(result.player1done && thisPlayer == "player1"){
+        if(result.player1done && thisPlayer == "player1"){
+            console.log("hiding input for p1");
             hideInput();
-        } else if(result.player1done && thisPlayer == "player2"){
+        } else if(result.player2done && thisPlayer == "player2"){
+            console.log("hiding input for p2");
             hideInput();
         } else {
+            console.log("showing input");
             showInput();
-        }*/
+        }
 
         $("#round-count").text(game[thisPlayer].history.length + 1);
         $("#your-word").text(yourLastWord);
         $("#their-word").text(theirLastWord);
-        $("#input-wrapper").show();
-        $("#guess-waiting-status").hide();
-
     }
 
 

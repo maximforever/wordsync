@@ -258,7 +258,7 @@ function submitGuess(db, playerId, gameId, word, done){
                             p2status = false;
 
                         if(updatedGame.player1.currentWord != null && updatedGame.player1.currentWord != "null" ) { p1status = true}
-                        if(updatedGame.player2.currentWord != null && updatedGame.player2.currentWord != "null" ) { p1status = true}
+                        if(updatedGame.player2.currentWord != null && updatedGame.player2.currentWord != "null" ) { p2status = true}
 
                         done({
                             status: "success",
