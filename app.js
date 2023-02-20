@@ -26,8 +26,8 @@ app.set("view engine", "ejs");                                  // tells us what
 
 app.use(express.static('public'));                              // sets the correct directory for static files we're going to serve - I believe this whole folder is sent to the user
 
-if($LIVE){                                                                           // this is how I do config, folks. put away your pitforks, we're all learning here.
-    dbAddress = $ATLAS_STRING;
+if(process.env.LIVE){                                                                           // this is how I do config, folks. put away your pitforks, we're all learning here.
+    dbAddress = process.env.ATLAS_STRING;
 } else {
     dbAddress = "mongodb://localhost:27017/wordsync";
 }
@@ -51,7 +51,7 @@ MongoClient.connect(dbAddress, function(err, database){
 
         var thisDb = db;
 
-        var sessionSecret = $SESSION_SECRET || "ejqjxvsh994hw8e7fl4gbnslvt3";
+        var sessionSecret = process.env.SESSION_SECRET || "ejqjxvsh994hw8e7fl4gbnslvt3";
 
         var sessionMiddleware = session({
             secret: sessionSecret,
