@@ -20,14 +20,14 @@ var game = null;
 
 var userCount = 0;
 
-app.set("port", process.env.PORT || 3000)                       // we're gonna start a server on whatever the environment port is or on 3000
+app.set("port", $PORT || 3000)                       // we're gonna start a server on whatever the environment port is or on 3000
 app.set("views", path.join(__dirname, "/public/views"));        // tells us where our views are
 app.set("view engine", "ejs");                                  // tells us what view engine to use
 
 app.use(express.static('public'));                              // sets the correct directory for static files we're going to serve - I believe this whole folder is sent to the user
 
-if(process.env.LIVE){                                                                           // this is how I do config, folks. put away your pitforks, we're all learning here.
-    dbAddress = process.env.ATLAS_STRING;
+if($LIVE){                                                                           // this is how I do config, folks. put away your pitforks, we're all learning here.
+    dbAddress = $ATLAS_STRING;
 } else {
     dbAddress = "mongodb://localhost:27017/wordsync";
 }
@@ -51,10 +51,10 @@ MongoClient.connect(dbAddress, function(err, database){
 
         var thisDb = db;
 
-        var sessionSecret = process.env.SESSION_SECRET || "ejqjxvsh994hw8e7fl4gbnslvt3";
+        var sessionSecret = $SESSION_SECRET || "ejqjxvsh994hw8e7fl4gbnslvt3";
 
-        var sessionMiddleware = session({                                
-            secret: sessionSecret,             
+        var sessionMiddleware = session({
+            secret: sessionSecret,
             saveUninitialized: true,
             resave: false,
             secure: false,
