@@ -20,7 +20,7 @@ var game = null;
 
 var userCount = 0;
 
-app.set("port", $PORT || 3000)                       // we're gonna start a server on whatever the environment port is or on 3000
+app.set("port", 8080 || 3000)                       // we're gonna start a server on whatever the environment port is or on 3000
 app.set("views", path.join(__dirname, "/public/views"));        // tells us where our views are
 app.set("view engine", "ejs");                                  // tells us what view engine to use
 
