@@ -27,7 +27,7 @@ app.set("view engine", "ejs");                                  // tells us what
 app.use(express.static('public'));                              // sets the correct directory for static files we're going to serve - I believe this whole folder is sent to the user
 
 if(process.env.LIVE){                                                                           // this is how I do config, folks. put away your pitforks, we're all learning here.
-    dbAddress = "mongodb://" + process.env.MLAB_USERNAME + ":" + process.env.MLAB_PASSWORD + "@ds251277.mlab.com:51277/wordsync";
+    dbAddress = process.env.ATLAS_STRING;
 } else {
     dbAddress = "mongodb://localhost:27017/wordsync";
 }
